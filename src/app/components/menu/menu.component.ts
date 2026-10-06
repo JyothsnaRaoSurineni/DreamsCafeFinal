@@ -1,7 +1,8 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MenuItem } from '../../models/models';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-menu',
@@ -37,7 +38,7 @@ import { MenuItem } from '../../models/models';
               [style.color]="activeCategory === cat ? 'var(--primary)' : 'rgba(255,255,255,0.5)'"
               [style.background]="activeCategory === cat ? 'rgba(192, 132, 252, 0.12)' : 'transparent'"
               [style.border]="activeCategory === cat ? '1px solid var(--primary)' : '1px solid transparent'"
-              style="padding: 10px 20px; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 2px; transition: all 0.3s ease;"
+              style="padding: 10px 20px; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 2px; transition: all 0.3s ease; cursor: pointer;"
             >
               {{ cat }}
             </button>
@@ -67,7 +68,7 @@ import { MenuItem } from '../../models/models';
                 [style.background]="activeDiet === diet ? 'rgba(192, 132, 252, 0.2)' : 'rgba(255,255,255,0.04)'"
                 [style.color]="activeDiet === diet ? 'var(--primary)' : 'rgba(255,255,255,0.6)'"
                 [style.border]="activeDiet === diet ? '1px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)'"
-                style="padding: 6px 14px; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; border-radius: 2px;"
+                style="padding: 6px 14px; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; border-radius: 2px; cursor: pointer;"
               >
                 {{ diet }}
               </button>
@@ -146,7 +147,7 @@ import { MenuItem } from '../../models/models';
                   (click)="handleAdd($event, item)"
                   [style.background]="addedItemId === item.id ? 'var(--primary)' : 'rgba(192, 132, 252, 0.15)'"
                   [style.color]="addedItemId === item.id ? 'var(--black)' : 'var(--primary-light)'"
-                  style="border: 1px solid var(--primary); padding: 8px 16px; border-radius: 2px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; gap: 6px; transition: all 0.3s;"
+                  style="border: 1px solid var(--primary); padding: 8px 16px; border-radius: 2px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; display: flex; align-items: center; gap: 6px; transition: all 0.3s; cursor: pointer;"
                 >
                   <span *ngIf="addedItemId === item.id">Added!</span>
                   <span *ngIf="addedItemId !== item.id">+ Add to Order</span>
@@ -162,7 +163,7 @@ import { MenuItem } from '../../models/models';
     </section>
   `
 })
-export class MenuComponent {
+export class MenuComponent implements OnInit {
   @Input() menu: MenuItem[] = [];
   @Output() addToCart = new EventEmitter<MenuItem>();
   @Output() selectDish = new EventEmitter<MenuItem>();
@@ -172,14 +173,24 @@ export class MenuComponent {
   searchQuery = '';
   addedItemId: string | null = null;
 
-  categories = ['All', 'Starters', 'Main Course', 'Biryanis & Rice', 'Cocktails & Beverages', 'Desserts'];
+  categories = ['All', 'Starters', 'Main Course', 'Breads & Biryani', 'Desserts', 'Beverages'];
+
+  constructor(private apiService: ApiService) {}
+
+  ngOnInit(): void {
+    if (!this.menu || this.menu.length === 0) {
+      this.apiService.getMenu().subscribe(data => this.menu = data);
+    }
+  }
 
   get filteredMenu(): MenuItem[] {
     return this.menu.filter(item => {
-      const matchCat = this.activeCategory === 'All' || item.category.toLowerCase() === this.activeCategory.toLowerCase();
+      const matchCat = this.activeCategory === 'All' || 
+                       item.category.toLowerCase().trim() === this.activeCategory.toLowerCase().trim() ||
+                       (this.activeCategory === 'Breads & Biryani' && (item.category.toLowerCase().includes('biryani') || item.category.toLowerCase().includes('bread')));
       const matchDiet = this.activeDiet === 'All' || item.diet.toLowerCase() === this.activeDiet.toLowerCase();
-      const query = this.searchQuery.toLowerCase();
-      const matchSearch = item.name.toLowerCase().includes(query) || item.description.toLowerCase().includes(query);
+      const query = this.searchQuery.toLowerCase().trim();
+      const matchSearch = !query || item.name.toLowerCase().includes(query) || item.description.toLowerCase().includes(query) || item.category.toLowerCase().includes(query);
       return matchCat && matchDiet && matchSearch;
     });
   }

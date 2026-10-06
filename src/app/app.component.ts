@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -19,6 +19,7 @@ import { AdminModalComponent } from './components/modals/admin-modal.component';
 
 import { MenuItem } from './models/models';
 import { CartService } from './services/cart.service';
+import { ApiService } from './services/api.service';
 
 @Component({
   selector: 'app-root',
@@ -59,10 +60,12 @@ import { CartService } from './services/cart.service';
         <app-story></app-story>
 
         <app-signatures 
+          [menu]="menuItems"
           (selectDish)="onSelectDish($event)">
         </app-signatures>
 
         <app-menu 
+          [menu]="menuItems"
           (selectDish)="onSelectDish($event)"
           (addToCart)="onAddToCart($event)">
         </app-menu>
@@ -115,16 +118,27 @@ import { CartService } from './services/cart.service';
     }
   `]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   isReservationOpen: boolean = false;
   isCartOpen: boolean = false;
   isDishDetailOpen: boolean = false;
   isAdminOpen: boolean = false;
 
+  menuItems: MenuItem[] = [];
   selectedDish: MenuItem | null = null;
   preselectedLocationId: string = '1';
 
-  constructor(private cartService: CartService) {}
+  constructor(
+    private cartService: CartService,
+    private apiService: ApiService
+  ) {}
+
+  ngOnInit(): void {
+    this.apiService.getMenu().subscribe({
+      next: (data) => this.menuItems = data,
+      error: (err) => console.error('Error fetching menu items:', err)
+    });
+  }
 
   scrollToMenu(): void {
     const element = document.getElementById('menu');

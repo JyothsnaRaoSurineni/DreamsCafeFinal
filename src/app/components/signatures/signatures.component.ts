@@ -1,6 +1,7 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuItem } from '../../models/models';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-signatures',
@@ -88,11 +89,20 @@ import { MenuItem } from '../../models/models';
     </section>
   `
 })
-export class SignaturesComponent {
+export class SignaturesComponent implements OnInit {
   @Input() menu: MenuItem[] = [];
   @Output() selectDish = new EventEmitter<MenuItem>();
 
+  constructor(private apiService: ApiService) {}
+
+  ngOnInit(): void {
+    if (!this.menu || this.menu.length === 0) {
+      this.apiService.getMenu().subscribe(data => this.menu = data);
+    }
+  }
+
   get signatures(): MenuItem[] {
-    return this.menu.filter(item => item.isChefSpecial).slice(0, 3);
+    const specials = this.menu.filter(item => item.isChefSpecial);
+    return specials.length > 0 ? specials.slice(0, 3) : this.menu.slice(0, 3);
   }
 }
