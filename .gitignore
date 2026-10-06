@@ -2,9 +2,10 @@
 node_modules/
 .pnpm-store/
 
-# Production builds
+# Production builds & cache
 dist/
 build/
+.angular/
 
 # Environment variables
 .env

@@ -312,48 +312,6 @@
   ],
   "orders": [
     {
-      "id": "ORD-7832",
-      "customerName": "Jonny",
-      "email": "",
-      "phone": "4521004521",
-      "addressLine1": "h61",
-      "addressLine2": "madhapur",
-      "address": "h61, madhapur",
-      "items": [
-        {
-          "id": "m-10",
-          "name": "Dreams Signature Dum Mutton Biryani",
-          "price": 840,
-          "quantity": 1
-        }
-      ],
-      "totalAmount": 882,
-      "paymentMethod": "UPI / GPay",
-      "status": "Preparing",
-      "createdAt": "2026-10-05T10:02:06.056Z"
-    },
-    {
-      "id": "ORD-1717",
-      "customerName": "Jonny",
-      "email": "",
-      "phone": "4521004521",
-      "addressLine1": "h61",
-      "addressLine2": "madhapur",
-      "address": "h61, madhapur",
-      "items": [
-        {
-          "id": "m-11",
-          "name": "Kacchi Yakhni Chicken Biryani",
-          "price": 680,
-          "quantity": 1
-        }
-      ],
-      "totalAmount": 714,
-      "paymentMethod": "Pay on Delivery",
-      "status": "Preparing",
-      "createdAt": "2026-10-05T10:01:44.556Z"
-    },
-    {
       "id": "ORD-1092",
       "customerName": "Priya Verma",
       "email": "priya.v@example.com",

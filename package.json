@@ -1,27 +1,38 @@
 {
-  "name": "antera-kitchen-and-bar",
+  "name": "dreams-kitchen-angular",
   "version": "1.0.0",
-  "description": "AnTeRa Kitchen & Bar - Contemporary Indian Fine Dining Full-Stack Application",
+  "description": "Dreams Kitchen & Bar - Full-Stack Angular & Node.js Application",
   "main": "server/server.js",
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "node server/server.js",
-    "dev:client": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev:client": "ng serve --proxy-config proxy.conf.json",
+    "build": "ng build",
+    "start": "node server/server.js"
   },
   "dependencies": {
+    "@angular/animations": "^18.0.0",
+    "@angular/common": "^18.0.0",
+    "@angular/compiler": "^18.0.0",
+    "@angular/core": "^18.0.0",
+    "@angular/forms": "^18.0.0",
+    "@angular/platform-browser": "^18.0.0",
+    "@angular/platform-browser-dynamic": "^18.0.0",
+    "@angular/router": "^18.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "lucide-react": "^0.395.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "lucide-angular": "^0.395.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.14.3"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.1",
+    "@angular-devkit/build-angular": "^18.0.0",
+    "@angular/cli": "^18.0.0",
+    "@angular/compiler-cli": "^18.0.0",
     "concurrently": "^8.2.2",
-    "vite": "^5.3.1"
+    "typescript": "~5.4.2"
   }
 }
